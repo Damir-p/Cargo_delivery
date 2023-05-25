@@ -1,0 +1,31 @@
+version: '3'
+services:
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_DB=carsdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '6432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    command: >
+      bash -c "python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - '8000:8000'
+
+volumes:
+  pgdata:
+
+
+

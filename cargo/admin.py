@@ -1,3 +1,4 @@
 from django.contrib import admin
+from cargo.models import Cargo
 
-# Register your models here.
+admin.site.register(Cargo)

@@ -7,7 +7,7 @@ class Location(models.Model):
     state = models.CharField(
         max_length=100
         )
-    postcode = models.CharField(
+    zipcode = models.CharField(
         max_length=20
         )
     latitude = models.FloatField(
@@ -24,4 +24,4 @@ class Location(models.Model):
         verbose_name_plural = "Locations"
     
     def __str__(self):
-        return f"{self.city}, {self.state} {self.zip_code}"
+        return f"{self.city}, {self.state} {self.zipcode}"
