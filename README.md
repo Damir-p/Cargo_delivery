@@ -9,3 +9,6 @@
 2 docker-compose up
 
 <!-- удачи :) -->
+
+<!-- что бы загрузить данные в uszips.csv файле -->
+python manage.py load_locations
