@@ -10,6 +10,8 @@ from cars.models import Car
 from cargo.serializers import CargoSerializer
 from location.models import Location
 
+
+
 class CargoViewSet(viewsets.ModelViewSet):
     queryset = Cargo.objects.all()
     serializer_class = CargoSerializer
@@ -51,7 +53,7 @@ def get_cargo_list(request):
         print(f"Расстояние между pick-up и delivery: {dist} км")
         
         cars_within_distance = Car.objects.filter(
-            location__distance_lte=(pickup.location, dist)
+            location__distance_lte=(pickup.Location, dist) 
             )
 
         car_count = cars_within_distance.count()
@@ -117,22 +119,19 @@ def delete_cargo(request, cargo_id):
     cargo.delete()    
     return JsonResponse({'message': 'Cargo deleted successfully'})
 
-
 def get_filtered_cargos(request):
     min_weight = request.GET.get('min_weight')
     max_weight = request.GET.get('max_weight')
     max_distance = request.GET.get('max_distance')
     
-    cargos = Cargo.objects.filter(weight__gte=min_weight, weight__lte=max_weight)
+    cargos = Cargo.objects.all()  # Получаем все грузы
+    
+    if min_weight is not None:
+        cargos = cargos.filter(weight__gte=min_weight)
+    if max_weight is not None:
+        cargos = cargos.filter(weight__lte=max_weight)
+    
     filtered_cargos = []
     
-    for cargo in cargos:
-        filtered_cargos.append({
-            'id': cargo.id,
-            'pick_up_location': cargo.pick_up_location,
-            'delivery_location': cargo.delivery_location,
-            'weight': cargo.weight,
-            'description': cargo.description,
-        })    
-    return JsonResponse({'cargos': filtered_cargos})
-
+    for cargo in cargos:        
+        return JsonResponse({'cargos': filtered_cargos})
