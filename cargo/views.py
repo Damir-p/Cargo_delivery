@@ -69,7 +69,6 @@ def get_cargo_list(request):
         cargo_list.append(cargo_info)    
     return JsonResponse({'cargo_list': json.dumps(cargo_list)})
 
-
 def get_cargo_info(request, cargo_id):
     cargo = get_object_or_404(Cargo, id=cargo_id)
     pickup = cargo.pick_up_location
@@ -83,35 +82,38 @@ def get_cargo_info(request, cargo_id):
     car_info_list = []
 
     for car in cars:
-        car_coords = (car.location.latitude, car.location.longitude)
+        car_coords = (car.current_location.latitude, car.current_location.longitude)
         car_distance = geodesic(pickup_coords, car_coords).km
         car_info = {
-            'car_number': car.number,
+            'car_number': car.unique_number,
             'distance': car_distance
         }
         car_info_list.append(car_info)
 
     cargo_info = {
         'id': cargo.id,
-        'pick_up_location': pickup.name,
-        'delivery_location': delivery.name,
+        'pick_up_location': pickup.city,
+        'delivery_location': delivery.city,
         'weight': cargo.weight,
         'description': cargo.description,
         'cars': car_info_list
     }
     return JsonResponse({'cargo_info': cargo_info})
-
-
+    
+    
 def edit_cargo(request, cargo_id):
     cargo = get_object_or_404(Cargo, id=cargo_id)
     weight = request.POST.get('weight')
     description = request.POST.get('description')
     
-    cargo.weight = weight
-    cargo.description = description
-    cargo.save()
+    if weight is not None:
+        cargo.weight = weight
     
+    if description is not None:
+        cargo.description = description
+    cargo.save()
     return JsonResponse({'message': 'Cargo updated successfully'})
+
 
 
 def delete_cargo(request, cargo_id):
@@ -119,19 +121,18 @@ def delete_cargo(request, cargo_id):
     cargo.delete()    
     return JsonResponse({'message': 'Cargo deleted successfully'})
 
+
 def get_filtered_cargos(request):
     min_weight = request.GET.get('min_weight')
     max_weight = request.GET.get('max_weight')
     max_distance = request.GET.get('max_distance')
     
-    cargos = Cargo.objects.all()  # Получаем все грузы
+    cargos = Cargo.objects.all()
     
     if min_weight is not None:
         cargos = cargos.filter(weight__gte=min_weight)
     if max_weight is not None:
         cargos = cargos.filter(weight__lte=max_weight)
-    
     filtered_cargos = []
-    
     for cargo in cargos:        
         return JsonResponse({'cargos': filtered_cargos})
