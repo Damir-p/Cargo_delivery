@@ -15,5 +15,6 @@ WORKDIR /app
 
 ENV DJANGO_SETTINGS_MODULE cargo_delivery.settings
 
-CMD python manage.py makemigrations && python manage.py migrate && python manage.py loaddata initial_data.json && python manage.py runserver 0.0.0.0:8000
+CMD python manage.py makemigrations && python manage.py migrate && python manage.py load_locations  && python manage.py runserver 0.0.0.0:8000
 
+# python manage.py loaddata initial_data.json

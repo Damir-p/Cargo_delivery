@@ -40,7 +40,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
  
-
     'cargo',
     'cars',
     'location',
@@ -87,7 +86,6 @@ WSGI_APPLICATION = 'cargo_delivery.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
 
 DATABASES = {
     'default': {

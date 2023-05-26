@@ -1,7 +1,7 @@
 version: '3'
 services:
   db:
-    image: postgres:14
+    image: postgres:12
     environment:
       - POSTGRES_DB=carsdb
       - POSTGRES_USER=postgres

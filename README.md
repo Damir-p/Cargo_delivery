@@ -12,3 +12,9 @@
 
 <!-- что бы загрузить данные в uszips.csv файле -->
 python manage.py load_locations
+
+<!-- admin login -->
+admin
+
+<!-- admin password -->
+admin
