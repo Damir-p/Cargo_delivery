@@ -1,6 +1,11 @@
-from django.urls import path
-from cars.views import edit_car
+from django.urls import path, include
+from rest_framework import routers
+from cars.views import CarViewSet
+
+router = routers.DefaultRouter()
+router.register(r'cars', CarViewSet)
+
 
 urlpatterns = [
-    path('car/<int:car_id>/edit', edit_car, name='edit_car'),
+    path('car_edit/', include(router.urls)),
 ]

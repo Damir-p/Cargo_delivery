@@ -30,6 +30,7 @@ class Car(models.Model):
     def __str__(self):
         return self.unique_number
 
+
     def save(self, *args, **kwargs):
         if not self.unique_number:
             self.unique_number = f"{random.randint(1000, 9999)}{generate_random_letter()}"

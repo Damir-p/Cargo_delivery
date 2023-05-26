@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from geopy import distance
+import json
 from geopy.distance import geodesic
 
 from cargo.models import Cargo
@@ -22,11 +23,11 @@ def create_cargo(request):
     
     pick_up_location = get_object_or_404(
         Location, 
-        zip_code=pick_up_zip
+        zipcode=pick_up_zip
         )
     delivery_location = get_object_or_404(
         Location, 
-        zip_code=delivery_zip)
+        zipcode=delivery_zip)
 
     cargo = Cargo.objects.create(
         pick_up_location=pick_up_location, 
@@ -46,12 +47,13 @@ def get_cargo_list(request):
         
         pickup_coords = (pickup.latitude, pickup.longitude)
         delivery_coords = (delivery.latitude, delivery.longitude)
-        dist = distance(pickup_coords, delivery_coords).km
+        dist = distance.distance(pickup_coords, delivery_coords).km
         print(f"Расстояние между pick-up и delivery: {dist} км")
-
+        
         cars_within_distance = Car.objects.filter(
-            location__distance_lte=(pickup.location, distance)
+            location__distance_lte=(pickup.location, dist)
             )
+
         car_count = cars_within_distance.count()
         
         cargo_info = {
@@ -63,7 +65,7 @@ def get_cargo_list(request):
         }
         
         cargo_list.append(cargo_info)    
-    return JsonResponse({'cargo_list': cargo_list})
+    return JsonResponse({'cargo_list': json.dumps(cargo_list)})
 
 
 def get_cargo_info(request, cargo_id):
